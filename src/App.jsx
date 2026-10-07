@@ -1,122 +1,76 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+// ============================================================
+// App.jsx - קומפוננטת האב (Parent Component)
+// ============================================================
+// זהו "הרכיב הראשי" של האפליקציה. הוא:
+//   1. מחזיק את הנתונים (משימות + פרטי המשתמש)
+//   2. מייבא את שלוש קומפוננטות-הבן
+//   3. מרנדר אותן ומעביר להן את הנתונים כ-props
+//
+// חשוב: App.jsx הוא היחיד שמכיר את הנתונים. הבנים מקבלים אותם
+// "מן המוכן" ולא נוגעים בהם. זרימת המידע היא תמיד מהאב לבן - בכיוון אחד.
+// ============================================================
+
+// ייבוא הקומפוננטות. הנתיב ./components/... הוא יחסי לקובץ הנוכחי (src/).
+// (בסביבות מודרניות אין חובה לכתוב את הסיומת .jsx - Vite משלים אותה לבד.)
+import Header from './components/Header.jsx'
+import TaskList from './components/TaskList.jsx'
+import Summary from './components/Summary.jsx'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // ---------- הנתונים (Data) ----------
+  // משתנים "רגילים" בקומפוננטה - כל עוד לא משתמשים ב-useState,
+  // הם נקראים פעם אחת בעת הרינדור ולא משתנים אחר כך.
+  // זו בדיוק ההתנהגות שהמטלה ביקשה: נתונים סטטיים, בלי שינוי.
 
+  // מערך של אובייקטים. כל אובייקט מייצג משימה אחת עם שני שדות:
+  // id (מזהה ייחודי - משמש כ-key) ו-status (המצב של המשימה).
+  const tasks = [
+    { id: 1, name: 'פריט 1', status: 'הושלמה' },
+    { id: 2, name: 'פריט 2', status: 'הושלמה' },
+    { id: 3, name: 'פריט 3', status: 'בתהליך' },
+    { id: 4, name: 'פריט 4', status: 'טרם החלה' },
+    { id: 5, name: 'פריט 5', status: 'בתהליך' },
+    { id: 6, name: 'פריט 6', status: 'טרם החלה' },
+  ]
+
+  // אובייקט שמתאר את המשתמש של האתר.
+  const user = {
+    fullName: 'אילה בן סימון',
+    role: 'עובדת השם',
+  }
+
+  // קבוע לכותרת האתר.
+  const siteName = 'ניהול משימות'
+
+  // ---------- התצוגה (JSX) ----------
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    // <div className="app"> הוא "עוטף" אחד לכל האפליקציה, כדי שנוכל לעצב אותה.
+    // שימו לב: ב-JSX כותבים className ולא class (כי class היא מילה שמורה ב-JS),
+    // והערך הוא מחרוזת - שם של מחלקת CSS.
+    <div className="app">
+      {/*
+        --- העברת נתונים לקומפוננטת הבן (props) ---
+        הכתיב <Header user={user} siteName={siteName} /> יוצר "תג" של הקומפוננטה
+        שלנו, בדיוק כמו <div>. כל מה שבתוך התג נהפך לשדות באובייקט props
+        שמתקבל בתוך Header. בתוך { } כותבים ביטוי JS - כאן שם של משתנה.
+        לכן user={user} מעביר הלאה את המשתנה user.
+      */}
+      <Header user={user} siteName={siteName} />
 
-      <div className="ticks"></div>
+      {/* כאן מעבירים את המערך tasks (כל המשימות) לקומפוננטת הרשימה */}
+      <TaskList tasks={tasks} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      {/*
+        כאן מעבירים שני דברים: את כל המערך ואת שם המשתמש.
+        הקומפוננטה עצמה תחשב כמה משימות יש וכמה הושלמו -
+        היא לא מקבלת מספרים מוכנים, אלא גוזרת אותם מהנתונים.
+      */}
+      <Summary tasks={tasks} userName={user.fullName} />
+    </div>
   )
 }
 
+// ייצוא ברירת מחדל (default export) - מאפשר לייבוא את הפונקציה
+// בשם שאנחנו בוחרים בקובץ אחר (ראו main.jsx: import App from './App.jsx').
 export default App
