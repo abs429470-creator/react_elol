@@ -6,9 +6,12 @@
 // וזה בדיוק היתרון: קומפוננטה עצמאית, ממוקדת, וקלה לשימוש חוזר.
 // ============================================================
 
-// כאן אנחנו מקבלים רק את השדה tasks מתוך ה-props.
-// (האב יכול להעביר עוד שדות - אנחנו מתעלמים מהם, וזה בסדר גמור.)
-function TaskList({ tasks }) {
+// עכשיו אנחנו מקבלים שני דברים מתוך ה-props:
+//   tasks         - המערך (כמו קודם).
+//   onToggleTask  - פונקציית-מאורע שהאב מעביר. המוסכמה בשם:
+//                   "on + שם הפעולה". הבן לא יודע איך הנתונים משתנים,
+//                   הוא רק קורא לפונקציה הזאת עם ה-id של המשימה.
+function TaskList({ tasks, onToggleTask }) {
   return (
     <section className="task-list">
       <h2>רשימת המשימות</h2>
@@ -31,9 +34,35 @@ function TaskList({ tasks }) {
         */}
         {tasks.map((task) => (
           <li key={task.id}>
-            {/* task.name ו-task.status מגיעים מהאב */}
+            {/*
+              <input type="checkbox"> = תיבת סימון. כאן יש שלושה חלקים:
+                - checked={task.completed} - "מצב מבוקר" (controlled input):
+                  ה-checkbox לא זוכר בעצמו אם הוא מסומן. הוא תמיד מציג
+                  את מה שיש בנתונים (task.completed). כך הנתון הוא
+                  "מקור האמת" היחיד, וה-UI תמיד תואם לנתון.
+                - onChange={...} - כל שינוי בתיבה פותח מאורע (event).
+                  אנחנו תופסים אותו וקוראים ל-onToggleTask עם ה-id של
+                  המשימה הזו. שימו לב: אנחנו עוטפים את הקריאה בפונקציית
+                  חץ => כך שהקריאה לא מתרחשת כבר עכשיו, אלא רק כשנלחצת
+                  התיבה (אחרת היינו קוראים לה בכל רינדור!).
+                - {() => onToggleTask(task.id)} - "סגירה" (closure): הפונקציה
+                  "זוכרת" את ה-task.id של הפריט הספציפי הזה.
+            */}
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => onToggleTask(task.id)}
+            />
+            {/* task.name מגיע מהאב */}
             <span className="task-name">{task.name}</span>
-            <span className="task-status">{task.status}</span>
+            {/*
+              ה-status כבר לא שדה בנתונים - הוא נגזר מ-completed:
+              תנאי (ternary) ? : - "אם completed אז 'הושלמה', אחרת 'לא הושלמה'".
+              קומפוננטה טובה גוזרת את התצוגה מהנתונים במקום לשמור עותקים.
+            */}
+            <span className="task-status">
+              {task.completed ? 'הושלמה' : 'לא הושלמה'}
+            </span>
           </li>
         ))}
       </ul>

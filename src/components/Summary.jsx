@@ -2,10 +2,8 @@
 // Summary.jsx - קומפוננטה שמציגה סיכום מספרי (קומפוננטת ילד)
 // ============================================================
 
-// מגדירים את המחרוזת שמייצגת "משימה שהושלמה" פעם אחת בלבד,
-// במשתנה עם אותיות גדולות (מוסכמה: קבוע שלא משתנה לאורך התוכנית).
-// הקבוע הזה נמצא מחוץ לפונקציה, כדי שלא ייווצר מחדש בכל רינדור.
-const DONE_STATUS = 'הושלמה'
+// כבר אין צורך בקבוע DONE_STATUS='הושלמה', כי המצב כעת הוא
+// שדה בוליאני completed (true/false) ולא מחרוזת. פשוט וקריא יותר.
 
 // מקבלים שני שדות מתוך ה-props: את כל המשימות ואת שם המשתמש.
 function Summary({ tasks, userName }) {
@@ -15,8 +13,9 @@ function Summary({ tasks, userName }) {
   const totalCount = tasks.length
 
   // filter = מתודה של מערך שמחזירה מערך חדש עם רק האיברים
-  // שהפונקציה החזירה לגביהם true. כאן: רק המשימות שהושלמו.
-  const doneTasks = tasks.filter((task) => task.status === DONE_STATUS)
+  // שהפונקציה החזירה לגביהם true. כאן: רק המשימות שהושלמו
+  // (completed === true, אפשר לקצר ל-task.completed בלבד).
+  const doneTasks = tasks.filter((task) => task.completed)
 
   // וכמה הן? גם כאן - שוב length, רק על המערך המסונן.
   const doneCount = doneTasks.length
