@@ -34,6 +34,48 @@
   color: var(--text);
 }
 
+/* ---------- טופס הזנת שם ותפקיד ---------- */
+.name-form {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+/* כל שורה בטופס: הכיתוב והתיבה זה לצד זה, עם רווח ביניהם */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* רוחב קבוע לכיתוב, כדי ששתי התיבות יתחילו באותו קו אנכי */
+.form-row label {
+  min-width: 64px;
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+/* התיבה מתפרסת על שאר הרוחב. flex: 1 = "קח את כל המקום שנשאר".
+   font: inherit מבטיח שהטקסט בתיבה ייראה כמו שאר האתר (ולא בגופן
+   ברירת-המחדל של הדפדפן, שאינו תואם עברית תמיד). */
+.form-row input {
+  flex: 1;
+  font: inherit;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+/* מסגרת מודגשת כשהתיבה בשימוש - משוב ויזואלי חשוב לנגישות */
+.form-row input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 /* .summary הסיכום - הדגשה קלה כדי שיהיה קל לראות אותו */
 .summary {
   background: var(--accent-bg);
@@ -45,6 +87,80 @@
 
 .summary h2 {
   margin-bottom: 6px;
+}
+
+/* ---------- טופס הוספת משימה ---------- */
+.new-task-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+/* הכיתוב לא נשבר לשתי שורות גם במסך צר */
+.new-task-form label {
+  color: var(--text-h);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* כמו בטופס הקודם: התיבה "אוכלת" את שאר הרוחב.
+   min-width: 0 הוא תיקון מוכר ל-flexbox - בלעדיו תיבת קלט בתוך
+   flex עלולה "לסרב" להתכווץ ולשבור את הפריסה במסכים צרים.
+   הערך 0 מאפשר לה להתכווץ כראוי. */
+.new-task-form input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.new-task-form input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* הכפתור: בולט מספיק כדי שיהיה ברור שזה אזור הפעולה */
+.new-task-form button {
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 20px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+/* מצב "ריחוף" - משוב ויזואלי שהכפתור לחיץ.
+   :hover נוגע רק לעכבר; משתמשי מקלדת נעזרים ב-:focus-visible שלמטה. */
+.new-task-form button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.new-task-form button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* במסכים צרים הטופס נשבר לשורות - התיבה מקבלת שורה שלמה משלה */
+@media (max-width: 640px) {
+  .new-task-form {
+    flex-wrap: wrap;
+  }
+
+  .new-task-form input {
+    flex-basis: 100%;
+    order: 3;
+  }
 }
 
 /* ---------- רשימת המשימות ---------- */
